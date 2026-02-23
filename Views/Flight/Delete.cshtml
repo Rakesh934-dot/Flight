@@ -1,0 +1,16 @@
+@model global::Flight.Models.Flight
+
+<h2>Confirm Deletion</h2>
+
+<h4>
+    @Model.FlightNumber -
+    @Model.FromCity?.Name to @Model.ToCity?.Name
+</h4>
+
+<form asp-action="DeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.FlightId" />
+
+    <button class="btn btn-danger">Delete</button>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

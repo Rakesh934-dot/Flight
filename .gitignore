@@ -1,0 +1,68 @@
+### Visual Studio / .NET ###
+
+# Build Folders
+bin/
+obj/
+artifacts/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+*.sln.iml
+
+# Visual Studio Code workspace settings
+.vscode/
+
+# NuGet
+*.nupkg
+# The packages folder can be ignored because of PackageReference
+**/packages/*
+
+# Dotnet publish output
+publish/
+out/
+
+# Logs
+*.log
+build_log.txt
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Runtime / debug files
+*.pid
+*.seed
+*.db
+*.db-shm
+*.db-wal
+*.pdb
+
+# Test results
+TestResults/
+
+# Coverage
+.coverage
+.coveragexml
+
+# Temporary
+*.tmp
+*.temp
+
+# Resharper
+_ReSharper*/
+*.ReSharper
+
+# JetBrains Rider caches
+.idea/
+.idea/*
+
+# Generated files
+*.g.cs
+*.g.i.cs

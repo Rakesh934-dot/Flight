@@ -1,0 +1,56 @@
+﻿@model List<global::Flight.Models.Flight>
+
+<h2>Flights</h2>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<script>
+    (function () {
+        const alertEl = document.querySelector('.alert.alert-success');
+        if (!alertEl) return;
+        // auto-dismiss after 4 seconds
+        setTimeout(() => {
+            alertEl.style.transition = 'opacity 0.5s ease';
+            alertEl.style.opacity = '0';
+            setTimeout(() => alertEl.remove(), 500);
+        }, 4000);
+    })();
+</script>
+
+<div class="mb-3">
+    <a asp-controller="Flight" asp-action="Add" class="btn btn-primary">
+        Add New Flight
+    </a>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Flight Number</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Date</th>
+            <th class="text-end">Price</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var f in Model)
+        {
+            <tr>
+                <td>@f.FlightNumber</td>
+                <td>@f.FromCity?.Name</td>
+                <td>@f.ToCity?.Name</td>
+                <td>@f.Date?.ToString("M/d/yyyy")</td>
+                <td class="text-end">@f.Price?.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
+                <td>
+                    <a asp-controller="Flight" asp-action="Edit" asp-route-id="@f.FlightId">Edit</a> |
+                    <a asp-controller="Flight" asp-action="Delete" asp-route-id="@f.FlightId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
