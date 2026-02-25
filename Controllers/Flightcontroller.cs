@@ -2,27 +2,59 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Flight.Models;
+using FlightEntity = Flight.Models.Flight;
 
 namespace Flight.Controllers
 {
     public class FlightController : Controller
     {
-        private FlightContext context;
+        private readonly FlightContext context;
 
         public FlightController(FlightContext ctx)
         {
             context = ctx;
         }
 
-        // -------------------------
-        // ADD (GET)
-        // -------------------------
+        public IActionResult Index()
+        {
+            var flights = context.Flights
+                .Include(f => f.FromCity)
+                .Include(f => f.ToCity)
+                .OrderBy(f => f.Date)
+                .ThenBy(f => f.FlightNumber)
+                .ToList();
+
+            return View(flights);
+        }
+
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            var flight = context.Flights
+                .Include(f => f.FromCity)
+                .Include(f => f.ToCity)
+                .FirstOrDefault(f => f.FlightId == id);
+
+            if (flight == null)
+            {
+                return NotFound();
+            }
+
+            return View(flight);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            ViewBag.Action = "Create";
+            ViewBag.Cities = new SelectList(context.Cities.OrderBy(c => c.Name), "CityId", "Name");
+            return View("Edit", new FlightEntity());
+        }
+
         [HttpGet]
         public IActionResult Add()
         {
-            ViewBag.Action = "Add";
-            ViewBag.Cities = new SelectList(context.Cities.OrderBy(c => c.Name), "CityId", "Name");
-            return View("Edit", new Flight.Models.Flight());
+            return RedirectToAction(nameof(Create));
         }
 
         // -------------------------
@@ -36,7 +68,13 @@ namespace Flight.Controllers
                 .Include(f => f.FromCity)
                 .Include(f => f.ToCity)
                 .FirstOrDefault(f => f.FlightId == id);
-            ViewBag.Cities = new SelectList(context.Cities.OrderBy(c => c.Name), "CityId", "Name", flight?.FromCityId);
+
+            if (flight == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Cities = new SelectList(context.Cities.OrderBy(c => c.Name), "CityId", "Name");
 
             return View(flight);
         }
@@ -45,8 +83,7 @@ namespace Flight.Controllers
         // ADD/EDIT (POST)
         // -------------------------
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(Flight.Models.Flight flight)
+        public IActionResult Edit(FlightEntity flight)
         {
             if (ModelState.IsValid)
             {
@@ -56,10 +93,10 @@ namespace Flight.Controllers
                     context.Flights.Update(flight);
 
                 context.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.Action = (flight.FlightId == 0) ? "Add" : "Edit";
+            ViewBag.Action = (flight.FlightId == 0) ? "Create" : "Edit";
             ViewBag.Cities = new SelectList(context.Cities.OrderBy(c => c.Name), "CityId", "Name", flight?.FromCityId);
             return View(flight);
         }
@@ -75,6 +112,11 @@ namespace Flight.Controllers
                 .Include(f => f.ToCity)
                 .FirstOrDefault(f => f.FlightId == id);
 
+            if (flight == null)
+            {
+                return NotFound();
+            }
+
             return View(flight);
         }
 
@@ -82,7 +124,7 @@ namespace Flight.Controllers
         // DELETE (POST)
         // -------------------------
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
         {
             var flight = context.Flights.Find(id);
@@ -93,7 +135,7 @@ namespace Flight.Controllers
             }
 
             TempData["Message"] = "Flight deleted successfully.";
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -1,23 +1,10 @@
-﻿@model List<global::Flight.Models.Flight>
+﻿@model List<Models.Flight>
 
 <h2>Flights</h2>
 @if (TempData["Message"] != null)
 {
     <div class="alert alert-success">@TempData["Message"]</div>
 }
-
-<script>
-    (function () {
-        const alertEl = document.querySelector('.alert.alert-success');
-        if (!alertEl) return;
-        // auto-dismiss after 4 seconds
-        setTimeout(() => {
-            alertEl.style.transition = 'opacity 0.5s ease';
-            alertEl.style.opacity = '0';
-            setTimeout(() => alertEl.remove(), 500);
-        }, 4000);
-    })();
-</script>
 
 <div class="mb-3">
     <a asp-controller="Flight" asp-action="Add" class="btn btn-primary">

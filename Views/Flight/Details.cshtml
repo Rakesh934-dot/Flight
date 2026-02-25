@@ -1,0 +1,38 @@
+@model Models.Flight
+
+@{
+    ViewData["Title"] = "Flight Details";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Flight Details</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <div class="col-12 col-md-6">
+                <h2 class="h6 text-muted">Flight Number</h2>
+                <p class="fs-5 mb-0">@Model.FlightNumber</p>
+            </div>
+            <div class="col-12 col-md-6">
+                <h2 class="h6 text-muted">Route</h2>
+                <p class="fs-5 mb-0">@Model.FromCity?.Name → @Model.ToCity?.Name</p>
+            </div>
+            <div class="col-12 col-md-6">
+                <h2 class="h6 text-muted">Departure Date</h2>
+                <p class="fs-5 mb-0">@Model.Date?.ToString("dddd, dd MMMM yyyy")</p>
+            </div>
+            <div class="col-12 col-md-6">
+                <h2 class="h6 text-muted">Ticket Price</h2>
+                <p class="fs-5 mb-0">@Model.Price?.ToString("C")</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4 d-flex gap-2">
+    <a asp-action="Edit" asp-route-id="@Model.FlightId" class="btn btn-primary">Edit</a>
+    <a asp-action="Delete" asp-route-id="@Model.FlightId" class="btn btn-outline-danger">Delete</a>
+</div>

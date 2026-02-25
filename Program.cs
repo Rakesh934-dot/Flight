@@ -3,12 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' was not found.");
+
 // MVC
 builder.Services.AddControllersWithViews();
 
 // EF Core + SQLite
 builder.Services.AddDbContext<FlightContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("FlightContext")));
+    options.UseSqlite(connectionString));
 
 // Lowercase URLs + trailing slash
 builder.Services.AddRouting(options =>
@@ -18,6 +21,12 @@ builder.Services.AddRouting(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<FlightContext>();
+    db.Database.Migrate();
+}
 
 if (!app.Environment.IsDevelopment())
 {
@@ -29,8 +38,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

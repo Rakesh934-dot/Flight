@@ -1,0 +1,56 @@
+@model IEnumerable<Models.Flight>
+
+@{
+    ViewData["Title"] = "Flights";
+}
+
+<h1 class="display-6 fw-bold mb-3">Flights</h1>
+
+<p>
+    <a asp-controller="Flight" asp-action="Create" class="btn btn-primary btn-lg">Add New Flight</a>
+</p>
+
+@if (TempData["Message"] is string message)
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Flight Number</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Date</th>
+            <th class="text-end">Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="6" class="text-center text-muted">No flights available.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var flight in Model)
+            {
+                <tr>
+                    <td>@flight.FlightNumber</td>
+                    <td>@flight.FromCity?.Name</td>
+                    <td>@flight.ToCity?.Name</td>
+                    <td>@flight.Date?.ToString("M-d-yyyy")</td>
+                    <td class="text-end">@flight.Price?.ToString("C")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@flight.FlightId">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@flight.FlightId">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

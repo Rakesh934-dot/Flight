@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Flight.Models
 {
-    public class FlightContext : DbContext
+    public class FlightContext : IdentityDbContext<IdentityUser>
     {
         public FlightContext(DbContextOptions<FlightContext> options)
             : base(options)
@@ -14,6 +16,12 @@ namespace Flight.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Flight>()
+                .Property(f => f.Price)
+                .HasPrecision(18, 2);
+
             // Seed Cities
             modelBuilder.Entity<City>().HasData(
                 new City { CityId = "CHI", Name = "Chicago" },
