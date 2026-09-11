@@ -15,7 +15,25 @@ I built this project to gain hands-on experience with .NET web development, MVC 
 - HTML/CSS
 - Visual Studio Code
 - Git & GitHub
+## 📸 Application Screenshots
 
+### Flight Management Dashboard
+
+View and manage flight records with options to add, edit, and delete flights.
+
+![Flight Management Dashboard](screenshots/flight-list.png)
+
+### Create a Flight
+
+Add a new flight by entering the flight number, origin, destination, departure date, and ticket price.
+
+![Create Flight](screenshots/flight-create.png)
+
+### Edit a Flight
+
+Update information for an existing flight record.
+
+![Edit Flight](screenshots/flight-edit.png)
 ## 📁 Project Structure
 
 The application follows the MVC architecture:
